@@ -1,0 +1,40 @@
+1
+00:00:00,100 --> 00:00:14,867
+Welcome to AgentMesh AI, a graph-native multi-agent coordination and memory engine powered by FalkorDB, submitted for Graph Hacks: Context for AI Agents hosted by WeMakeDevs and FalkorDB.
+
+2
+00:00:14,817 --> 00:00:22,669
+Modern autonomous agent swarms fail when relying on flat vector databases or lossy chat histories.
+
+3
+00:00:22,669 --> 00:00:29,684
+They suffer from state drift, cannot trace causal decisions, and create circular deadlocks.
+
+4
+00:00:29,684 --> 00:00:35,473
+AgentMesh solves this by using FalkorDB as the central nervous system.
+
+5
+00:00:35,473 --> 00:00:42,657
+Here, agents, goals, tasks, memories, and decisions form a directed property graph.
+
+6
+00:00:42,657 --> 00:00:51,504
+Tasks are scheduled through atomic Cypher queries that verify all prerequisite subgraphs are resolved before execution.
+
+7
+00:00:51,504 --> 00:01:04,720
+When an agent acts, FalkorDB extracts a two-hop contextual neighborhood in under two milliseconds, injecting exact institutional memories and past decisions into the model's prompt.
+
+8
+00:01:04,720 --> 00:01:16,359
+As we trigger the autonomous swarm, specialized agents claim ready tasks, resolve dependencies, and record immutable decision trails directly into FalkorDB.
+
+9
+00:01:16,359 --> 00:01:25,279
+With real-time multi-hop Cypher traversal, circular dependencies are detected instantly, preventing pipeline deadlocks.
+
+10
+00:01:25,279 --> 00:01:32,160
+AgentMesh AI gives agents the connected context they need to remember, coordinate, and act.
+
