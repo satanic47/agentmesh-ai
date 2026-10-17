@@ -1,0 +1,22 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Arial,19,&H00FFFFFF,&H000000FF,&H00000000,&HA0000000,0,0,0,0,100,100,0,0,3,1.5,0,2,30,30,155,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.10,0:00:14.86,Default,,0,0,0,,Welcome to AgentMesh AI, a graph-native multi-agent coordination and\Nmemory engine powered by FalkorDB, submitted for Graph Hacks: Context for AI Agents hosted by WeMakeDevs and FalkorDB.
+Dialogue: 0,0:00:14.81,0:00:22.66,Default,,0,0,0,,Modern autonomous agent swarms fail when relying on flat vector databases\Nor lossy chat histories.
+Dialogue: 0,0:00:22.66,0:00:29.68,Default,,0,0,0,,They suffer from state drift, cannot trace causal decisions, and create\Ncircular deadlocks.
+Dialogue: 0,0:00:29.68,0:00:35.47,Default,,0,0,0,,AgentMesh solves this by using FalkorDB as the central nervous system.
+Dialogue: 0,0:00:35.47,0:00:42.65,Default,,0,0,0,,Here, agents, goals, tasks, memories, and decisions form a directed\Nproperty graph.
+Dialogue: 0,0:00:42.65,0:00:51.50,Default,,0,0,0,,Tasks are scheduled through atomic Cypher queries that verify all\Nprerequisite subgraphs are resolved before execution.
+Dialogue: 0,0:00:51.50,0:01:04.72,Default,,0,0,0,,When an agent acts, FalkorDB extracts a two-hop contextual neighborhood in\Nunder two milliseconds, injecting exact institutional memories and past decisions into the model's prompt.
+Dialogue: 0,0:01:04.72,0:01:16.35,Default,,0,0,0,,As we trigger the autonomous swarm, specialized agents claim ready tasks,\Nresolve dependencies, and record immutable decision trails directly into FalkorDB.
+Dialogue: 0,0:01:16.35,0:01:25.27,Default,,0,0,0,,With real-time multi-hop Cypher traversal, circular dependencies are\Ndetected instantly, preventing pipeline deadlocks.
+Dialogue: 0,0:01:25.27,0:01:32.16,Default,,0,0,0,,AgentMesh AI gives agents the connected context they need to remember,\Ncoordinate, and act.
