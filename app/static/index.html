@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgentMesh AI — Graph-Native Multi-Agent Coordination on FalkorDB</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans antialiased overflow-hidden">
+
+  <!-- Header Navigation -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur px-6 py-3.5 flex items-center justify-between shrink-0 z-20">
+    <div class="flex items-center gap-3">
+      <div class="size-9 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-violet-500/20">
+        <i class="fa-solid fa-diagram-project text-white text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-bold text-lg tracking-tight text-white">AgentMesh <span class="text-violet-400 font-mono text-sm font-semibold">AI</span></h1>
+          <span id="engineBadge" class="px-2 py-0.5 text-xs font-mono rounded-full bg-violet-500/10 text-violet-400 border border-violet-500/30">
+            <i class="fa-solid fa-circle text-[8px] animate-pulse text-violet-400 mr-1"></i> FalkorDB Ready
+          </span>
+        </div>
+        <p class="text-xs text-slate-400">Autonomous Multi-Agent Memory & Context Coordination</p>
+      </div>
+    </div>
+
+    <!-- Live Graph Stats -->
+    <div class="hidden md:flex items-center gap-5 text-xs font-mono bg-slate-950/60 border border-slate-800/80 px-4 py-2 rounded-lg">
+      <div><span class="text-slate-500">NODES:</span> <span id="statNodes" class="text-violet-300 font-bold">0</span></div>
+      <div class="h-3 w-px bg-slate-800"></div>
+      <div><span class="text-slate-500">EDGES:</span> <span id="statEdges" class="text-indigo-300 font-bold">0</span></div>
+      <div class="h-3 w-px bg-slate-800"></div>
+      <div><span class="text-slate-500">READY:</span> <span id="statReady" class="text-emerald-400 font-bold">0</span></div>
+      <div class="h-3 w-px bg-slate-800"></div>
+      <div><span class="text-slate-500">DEADLOCK:</span> <span id="statDeadlock" class="text-slate-400 font-bold">CLEAR</span></div>
+    </div>
+
+    <!-- Swarm Simulation Controls -->
+    <div class="flex items-center gap-2">
+      <button id="btnStep" class="px-3.5 py-1.5 rounded-md bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs shadow-md shadow-violet-600/20 flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-play text-xs"></i> Step Swarm
+      </button>
+      <button id="btnRunAll" class="px-3.5 py-1.5 rounded-md bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-xs shadow-md shadow-indigo-600/20 flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-forward-step text-xs"></i> Auto-Run
+      </button>
+      <button id="btnReset" class="px-3 py-1.5 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs border border-slate-700 transition" title="Reset Zero-Trust Mission">
+        <i class="fa-solid fa-rotate-left"></i> Reset
+      </button>
+      <button id="btnCycle" class="px-3 py-1.5 rounded-md bg-red-950/60 hover:bg-red-900/60 text-red-300 border border-red-800/50 text-xs transition" title="Inject Deadlock Cycle">
+        <i class="fa-solid fa-triangle-exclamation"></i> Test Cycle
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Canvas & Sidebar Container -->
+  <main class="flex-1 flex overflow-hidden relative">
+
+    <!-- Graph Canvas -->
+    <div class="flex-1 relative bg-slate-950 flex flex-col">
+      <div id="cy" class="w-full h-full"></div>
+
+      <!-- Graph Legend Overlay -->
+      <div class="absolute bottom-4 left-4 bg-slate-900/80 backdrop-blur border border-slate-800 rounded-lg p-3 text-xs flex flex-wrap items-center gap-4 shadow-xl z-10 font-mono">
+        <div class="flex items-center gap-1.5"><span class="size-3 rounded-full bg-violet-500 shadow-sm shadow-violet-500/50"></span> Agent</div>
+        <div class="flex items-center gap-1.5"><span class="size-3 rounded-full bg-amber-500 shadow-sm shadow-amber-500/50"></span> Goal</div>
+        <div class="flex items-center gap-1.5"><span class="size-3 rounded-full bg-sky-500 shadow-sm shadow-sky-500/50"></span> Task (Pending)</div>
+        <div class="flex items-center gap-1.5"><span class="size-3 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50"></span> Task (Done)</div>
+        <div class="flex items-center gap-1.5"><span class="size-3 rounded-full bg-pink-500 shadow-sm shadow-pink-500/50"></span> Decision</div>
+        <div class="flex items-center gap-1.5"><span class="size-3 rounded-full bg-teal-400 shadow-sm shadow-teal-400/50"></span> Memory</div>
+        <button id="btnFitGraph" class="text-slate-400 hover:text-white transition ml-2 border-l border-slate-700 pl-3">
+          <i class="fa-solid fa-compress mr-1"></i> Fit
+        </button>
+      </div>
+
+      <!-- Node Details Popover (Click to inspect) -->
+      <div id="nodeDetailBox" class="hidden absolute top-4 left-4 max-w-sm w-full bg-slate-900/95 backdrop-blur-md border border-slate-700/80 rounded-xl p-4 shadow-2xl z-10 text-xs">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800 mb-2">
+          <div class="flex items-center gap-2">
+            <span id="detailBadge" class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-violet-500/20 text-violet-300">NODE</span>
+            <span id="detailId" class="text-slate-400 font-mono text-[11px]"></span>
+          </div>
+          <button onclick="document.getElementById('nodeDetailBox').classList.add('hidden')" class="text-slate-400 hover:text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <h3 id="detailTitle" class="font-bold text-sm text-white mb-1"></h3>
+        <p id="detailDesc" class="text-slate-300 leading-relaxed mb-3"></p>
+        <div id="detailExtra" class="bg-slate-950 p-2.5 rounded font-mono text-[11px] text-slate-400 overflow-x-auto max-h-36"></div>
+      </div>
+    </div>
+
+    <!-- Right Control & Query Panel -->
+    <aside class="w-96 border-l border-slate-800 bg-slate-900/90 backdrop-blur flex flex-col shrink-0 z-20">
+      
+      <!-- Panel Tabs -->
+      <div class="flex border-b border-slate-800 text-xs font-medium">
+        <button id="tabCypherBtn" class="flex-1 py-3 text-center border-b-2 border-violet-500 text-white flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-terminal text-violet-400"></i> Cypher Terminal
+        </button>
+        <button id="tabFeedBtn" class="flex-1 py-3 text-center text-slate-400 hover:text-white flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-stream text-indigo-400"></i> Activity Feed
+        </button>
+        <button id="tabMemBtn" class="flex-1 py-3 text-center text-slate-400 hover:text-white flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-brain text-teal-400"></i> Memory
+        </button>
+      </div>
+
+      <!-- Tab 1: Cypher Terminal -->
+      <div id="tabCypher" class="flex-1 flex flex-col p-4 overflow-hidden">
+        <div class="mb-3">
+          <label class="block text-xs font-mono text-slate-400 mb-1">PRESET CYPHER QUERIES:</label>
+          <select id="queryPreset" class="w-full bg-slate-950 border border-slate-700 rounded-md px-3 py-1.5 text-xs font-mono text-slate-200 focus:outline-none focus:border-violet-500">
+            <option value="ready">1. Get Ready Tasks (Zero Unresolved Deps)</option>
+            <option value="context">2. 2-Hop Context Subgraph (Agent Prompt Injection)</option>
+            <option value="cycles">3. Detect Dependency Cycles & Deadlocks</option>
+            <option value="all_tasks">4. Match All Tasks and Assigned Agents</option>
+            <option value="decisions">5. Audit Decisions & Resolved Prereqs</option>
+          </select>
+        </div>
+
+        <div class="flex-1 flex flex-col min-h-0 mb-3">
+          <label class="block text-xs font-mono text-slate-400 mb-1">CYPHER QUERY EDITOR:</label>
+          <textarea id="cypherInput" class="flex-1 w-full bg-slate-950 border border-slate-700 rounded-md p-2.5 font-mono text-xs text-violet-200 focus:outline-none focus:border-violet-500 resize-none" spellcheck="false"></textarea>
+        </div>
+
+        <div class="flex items-center justify-between mb-3">
+          <button id="btnRunQuery" class="px-4 py-1.5 rounded-md bg-violet-600 hover:bg-violet-500 text-white font-medium text-xs shadow-md shadow-violet-600/20 flex items-center gap-1.5 transition">
+            <i class="fa-solid fa-bolt"></i> Execute Query
+          </button>
+          <span id="queryLatency" class="text-xs font-mono text-slate-400">0.00 ms</span>
+        </div>
+
+        <!-- Query Output -->
+        <div class="h-44 bg-slate-950 border border-slate-800 rounded-md p-2.5 overflow-auto font-mono text-xs text-slate-300">
+          <pre id="queryOutput" class="whitespace-pre-wrap text-[11px] text-slate-300">Ready to execute query...</pre>
+        </div>
+      </div>
+
+      <!-- Tab 2: Swarm Activity Feed -->
+      <div id="tabFeed" class="hidden flex-1 p-4 overflow-y-auto space-y-3">
+        <div id="feedList" class="space-y-2.5">
+          <!-- Populated dynamically -->
+          <div class="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 text-xs text-slate-400">
+            Click <strong class="text-violet-400">Step Swarm</strong> or <strong class="text-indigo-400">Auto-Run</strong> to observe agents coordinating in real time.
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Memory & Brain -->
+      <div id="tabMem" class="hidden flex-1 p-4 overflow-y-auto space-y-3">
+        <div id="memoryList" class="space-y-2.5">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+    </aside>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
