@@ -48,8 +48,9 @@ https://github.com/satanic47/agentmesh-ai
 
 ### 6. Live demo or deployment (Link — Optional)
 ```text
-https://agentmesh-ai.onrender.com (or local demo link http://localhost:8000)
+https://shivysidinfo.tech/agentmesh-ai/
 ```
+
 
 ---
 

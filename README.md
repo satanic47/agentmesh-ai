@@ -2,6 +2,7 @@
 ### Graph-Native Multi-Agent Memory & Context Coordination Engine
 **Powered by [FalkorDB](https://www.falkordb.com/) — The Ultra-Fast Graph Database for AI Agents**
 
+[![Live Demo](https://img.shields.io/badge/Live_Demo-shivysidinfo.tech-violet.svg)](https://shivysidinfo.tech/agentmesh-ai/)
 [![FalkorDB](https://img.shields.io/badge/Graph_Database-FalkorDB-6366f1.svg)](https://www.falkordb.com/)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110%2B-009688.svg)](https://fastapi.tiangolo.com/)
@@ -9,6 +10,7 @@
 [![Tests: 9 Passing](https://img.shields.io/badge/Tests-9%2F9%20Passing-brightgreen.svg)]()
 [![Docker: Ready](https://img.shields.io/badge/Docker-Compose_Ready-2496ED.svg)](docker-compose.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](LICENSE)
+
 
 > **Official Submission for [Graph Hacks: Context for AI Agents](https://www.wemakedevs.org/hackathons/falkordb)**  
 > Hosted by **WeMakeDevs** & **FalkorDB** (Oct 15–18, 2026)  
